@@ -82,7 +82,7 @@ class PhysicsEvent(object):
             'T': self.T,
         }
 
-    
+
 class BallEvent(PhysicsEvent):
     def __init__(self, t, i, **kwargs):
         super().__init__(t, **kwargs)
@@ -155,7 +155,7 @@ class BallStationaryEvent(BallEvent):
             'r_0': self._r_0.tolist()
         })
         return d
-    
+
 
 class BallRestEvent(BallStationaryEvent):
     def __init__(self, t, i, **kwargs):
@@ -191,7 +191,8 @@ class BallSpinningEvent(BallStationaryEvent):
     def json(self):
         d = super().json()
         d.update({
-            'b': self._b.tolist()
+            'omega_0_y': self._omega_0_y,
+            'b': self._b
         })
         return d
 
@@ -493,6 +494,7 @@ class RailCollisionEvent(BallEvent):
     def json(self):
         d = super().json()
         d.update({
+            'e_i': self.e_i.json(),
             'side': self.side
         })
         return d
@@ -536,6 +538,15 @@ class SegmentCollisionEvent(BallEvent):
         return self._child_events
     def __str__(self):
         return super().__str__()[:-1] + " seg=%d r=%s r_c=%s>" % (self.seg, self.r, self.r_c)
+    def json(self):
+        d = super().json()
+        d.update({
+            'e_i': self.e_i.json(),
+            'seg': self.seg,
+            'nor': self.nor.tolist(),
+            'tan': self.tan.tolist()
+        })
+        return d
 
 
 class CornerCollisionEvent(BallEvent):
@@ -585,6 +596,13 @@ class CornerCollisionEvent(BallEvent):
     def __str__(self):
         return super().__str__()[:-1] + " i_c=%s r_c=%s v_0=%s v_1=%s omega_0=%s omega_1=%s>" % (
             self.i_c, self.r_c, self.v_0, self.v_1, self.omega_0, self.omega_1)
+    def json(self):
+        d = super().json()
+        d.update({
+            'i_c': self.i_c,
+            'r_c': self.r_c.tolist()
+        })
+        return d
 
 
 class BallCollisionEvent(PhysicsEvent):
@@ -668,6 +686,13 @@ class BallCollisionEvent(PhysicsEvent):
                 child_events.append(e_1)
             self._child_events = tuple(child_events)
         return self._child_events
+    def json(self):
+        d = super().json()
+        d.update({
+            'i': self.i,
+            'j': self.j
+        })
+        return d
 
 
 class SimpleBallCollisionEvent(BallCollisionEvent):

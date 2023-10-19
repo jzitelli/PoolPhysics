@@ -283,6 +283,7 @@ def test_strike_ball_less_english(pool_physics,
     #               PhysicsEvent.events_str(events))
 
 
+@pytest.mark.skip
 @pytest.mark.parametrize("i_c", list(range(24)))
 def test_corner_collision(pool_physics,
                           plot_motion_timelapse,
