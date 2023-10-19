@@ -75,8 +75,14 @@ class PhysicsEvent(object):
             return '<%16s ( %5.15f )>' % (self.__class__.__name__, self.t)
         else:
             return '<%16s ( %5.15f ,  %5.15f )>' % (self.__class__.__name__, self.t, self.t+self.T)
+    def json(self):
+        return {
+            'type': self.__class__.__name__,
+            't': self.t,
+            'T': self.T,
+        }
 
-
+    
 class BallEvent(PhysicsEvent):
     def __init__(self, t, i, **kwargs):
         super().__init__(t, **kwargs)
@@ -90,6 +96,12 @@ class BallEvent(PhysicsEvent):
         return super().__str__()[:-1] + " i=%d>" % self.i
     def __repr__(self):
         return '%s(%d @ %s) at %x' % (self.__class__.__name__.split('.')[-1], self.i, self.t, id(self))
+    def json(self):
+        d = super().json()
+        d.update({
+            'i': self.i
+        })
+        return d
 
 
 class BallStationaryEvent(BallEvent):
@@ -136,7 +148,14 @@ class BallStationaryEvent(BallEvent):
         return out
     def __str__(self):
         return super().__str__()[:-1] + '\n r=%s>' % self._r
-
+    def json(self):
+        """Returns a dict which can be JSON-serialized (by json.dumps)"""
+        d = super().json()
+        d.update({
+            'r_0': self._r_0.tolist()
+        })
+        return d
+    
 
 class BallRestEvent(BallStationaryEvent):
     def __init__(self, t, i, **kwargs):
@@ -169,6 +188,12 @@ class BallSpinningEvent(BallStationaryEvent):
             out[:] = 0
         out[1] = self._omega_0_y + self._b * tau
         return out
+    def json(self):
+        d = super().json()
+        d.update({
+            'b': self._b.tolist()
+        })
+        return d
 
 
 class BallMotionEvent(BallEvent):
@@ -303,6 +328,13 @@ class BallMotionEvent(BallEvent):
         return out
     def __str__(self):
         return super().__str__()[:-1] + '\n r_0=%s\n v_0=%s\n a=%s\n omega_0=%s>' % (self._r_0, self._v_0, self.acceleration, self._omega_0)
+    def json(self):
+        d = super().json()
+        d.update({
+            'a': self._a.tolist(),
+            'b': self._b.tolist()
+        })
+        return d
 
 
 class BallRollingEvent(BallMotionEvent):
@@ -401,6 +433,14 @@ class CueStrikeEvent(BallEvent):
         return self._child_events
     def __str__(self):
         return super().__str__()[:-1] + '\n Q=%s\n V=%s\n M=%s>' % (self.Q, self.V, self.M)
+    def json(self):
+        d = super().json()
+        d.update({
+            'V': self.V.tolist(),
+            'M': self.M,
+            'Q': self.Q.tolist()
+        })
+        return d
 
 
 class RailCollisionEvent(BallEvent):
@@ -450,6 +490,12 @@ class RailCollisionEvent(BallEvent):
         return self._child_events
     def __str__(self):
         return super().__str__()[:-1] + " side=%d>" % self.side
+    def json(self):
+        d = super().json()
+        d.update({
+            'side': self.side
+        })
+        return d
 
 
 class SegmentCollisionEvent(BallEvent):

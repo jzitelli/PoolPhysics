@@ -44,16 +44,21 @@ def lambda_handler(event, context):
     events = physics.strike_ball(0.0, 0, ball_positions[0], r_c, V, M)
     
     print('strike on 0 resulted in %d events' % len(events))
-    print(PhysicsEvent.events_str(events[:10]))
-    
+    # print(PhysicsEvent.events_str(events[:10]))
+
+    # for e in events:
+    #     print(json.dumps(e.json()))
     # _logger.info('strike on %d resulted in %d events:\n\n%s\n', 0, len(events),
     #              PhysicsEvent.events_str(events))
 
     return {
         'statusCode': 200,
-        'body': json.dumps('Hello from Lambda!')
+        'body': json.dumps([e.json() for e in events])
     }
 
 
-#lambda_handler({'balls_on_table': [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]},
+# lambda_handler({'balls_on_table': [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]},
+#               None)
+
+# lambda_handler({'balls_on_table': [0,1,2,3,4,5,6,7,8]},
 #               None)
