@@ -24,7 +24,8 @@ DEG2RAD = np.pi/180
 
 def test_strike_ball(pool_physics,
                      plot_motion_timelapse,
-                     plot_energy):
+                     plot_energy,
+                     json_serialize_events):
     physics = pool_physics
     physics.reset(balls_on_table=[0])
     ball_positions = physics.eval_positions(0.0)
@@ -44,7 +45,8 @@ def test_strike_ball(pool_physics,
 
 def test_ball_collision(pool_physics,
                         plot_motion_timelapse,
-                        plot_energy):
+                        plot_energy,
+                        json_serialize_events):
     physics = pool_physics
     ball_positions = physics.eval_positions(0.0)
     ball_positions[1] = ball_positions[0]
@@ -67,7 +69,8 @@ def test_ball_collision(pool_physics,
 
 def test_angled_ball_collision(pool_physics,
                                plot_motion_timelapse,
-                               plot_energy):
+                               plot_energy,
+                               json_serialize_events):
     physics = pool_physics
     ball_positions = physics.eval_positions(0.0)
     ball_positions[1] = ball_positions[0]
@@ -95,7 +98,8 @@ def test_angled_ball_collision(pool_physics,
 
 def test_sliding_ball_collision(pool_physics,
                                 plot_motion_timelapse,
-                                plot_energy):
+                                plot_energy,
+                                json_serialize_events):
     physics = pool_physics
     ball_positions = physics.eval_positions(0.0)
     ball_positions[1] = ball_positions[0]
@@ -119,7 +123,8 @@ def test_sliding_ball_collision(pool_physics,
 def test_break(pool_physics,
                plot_motion_timelapse,
                plot_energy,
-               request):
+               request,
+               json_serialize_events):
     physics = pool_physics
     ball_positions = physics.eval_positions(0.0)
     r_c = ball_positions[0].copy()

@@ -65,6 +65,13 @@ def pool_physics(pool_table, request, ball_collision_model):
 
 
 @pytest.fixture
+def json_serialize_events(pool_physics, request):
+    import json
+    yield
+    _logger.info(json.dumps([e.json() for e in pool_physics.events]))
+
+
+@pytest.fixture
 def plot_motion(pool_physics, request):
     show_plots, save_plots = request.config.getoption('--show-plots'), request.config.getoption('--save-plots')
     if not (show_plots or save_plots):
